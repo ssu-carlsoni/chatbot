@@ -1,17 +1,32 @@
-from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from langchain_openai import ChatOpenAI
 from langserve import add_routes
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
 
 app = FastAPI()
 
-
-@app.get("/")
-async def redirect_root_to_docs():
-    return RedirectResponse("/docs")
+templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-# Edit this to add the chain you want to add
-# add_routes(app, NotImplemented)
+@app.get("/", response_class=HTMLResponse)
+async def read_root(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+
+add_routes(
+    app,
+    ChatOpenAI(model="gpt-3.5-turbo-0125", api_key=api_key),
+    path="/openai",
+)
 
 if __name__ == "__main__":
     import uvicorn
