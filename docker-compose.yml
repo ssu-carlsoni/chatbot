@@ -1,0 +1,30 @@
+services:
+
+  chatbot:
+    build:
+      context: ./services/chatbot
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./services/chatbot:/code
+    command: sh -c "uvicorn src.app.server:app --host 0.0.0.0 --port 8000 --reload"
+    depends_on:
+      - weaviate
+
+
+  weaviate:
+    image: semitechnologies/weaviate:1.25.11
+    ports:
+      - '8080:8080'
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'none'
+      CLUSTER_HOSTNAME: 'node1'
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+
+volumes:
+  weaviate_data:
