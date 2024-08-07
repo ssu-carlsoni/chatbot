@@ -8,7 +8,7 @@ services:
       - '8000:8000'
     volumes:
       - ./services/chatbot:/code
-    command: sh -c "uvicorn src.app.server:app --host 0.0.0.0 --port 8000 --reload"
+    command: sh -c "uvicorn src.fastapi.server:app --host 0.0.0.0 --port 8000 --reload"
     depends_on:
       - weaviate
 

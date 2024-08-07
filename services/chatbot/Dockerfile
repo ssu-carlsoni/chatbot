@@ -12,4 +12,4 @@ RUN poetry install --no-interaction --no-ansi --no-root
 
 COPY . .
 
-CMD ["uvicorn", "src.app.server:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "src.fastapi.server:app", "--host", "0.0.0.0", "--port", "8000"]
