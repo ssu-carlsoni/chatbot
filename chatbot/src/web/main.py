@@ -13,8 +13,8 @@ api_key = os.getenv("OPENAI_API_KEY")
 
 app = FastAPI()
 
-templates = Jinja2Templates(directory="src/fastapi/templates")
-app.mount("/static", StaticFiles(directory="src/fastapi/static"), name="static")
+templates = Jinja2Templates(directory="src/web/templates")
+app.mount("static", StaticFiles(directory="src/web/static"), name="static")
 
 
 @app.get("/", response_class=HTMLResponse)

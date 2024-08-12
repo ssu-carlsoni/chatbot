@@ -2,13 +2,13 @@ services:
 
   chatbot:
     build:
-      context: ./services/chatbot
+      context: chatbot
       dockerfile: Dockerfile
     ports:
       - '8000:8000'
     volumes:
-      - ./services/chatbot:/code
-    command: sh -c "uvicorn src.fastapi.server:app --host 0.0.0.0 --port 8000 --reload"
+      - ./chatbot:/code
+    command: sh -c "uvicorn src.web.main:app --host 0.0.0.0 --port 8000 --reload"
     depends_on:
       - weaviate
 
