@@ -1,10 +1,10 @@
 import typer
 
-from ..database.vector_store import WeaviateVectorStore
-from ..knowledge.knowledge_manager import KnowledgeManager
-from ..knowledge.extractor import CatalogExtractor
-from ..knowledge.fetcher import Fetcher
-from ..knowledge.url_manager import UrlManager
+from chatbot.database.vector_store import WeaviateVectorStore
+from chatbot.knowledge.knowledge_manager import KnowledgeManager
+from chatbot.knowledge.extractor import CatalogExtractor
+from chatbot.knowledge.fetcher import Fetcher
+from chatbot.knowledge.url_manager import UrlManager
 
 
 app = typer.Typer()
@@ -25,6 +25,11 @@ def update_knowledge():
         typer.echo("Knowledge Update Failed")
         raise typer.Exit(code=1)
 
+
+@app.command()
+def delete_knowledge():
+    typer.echo("Not Implemented")
+    raise typer.Exit(code=1)
 
 if __name__ == "__main__":
     app()

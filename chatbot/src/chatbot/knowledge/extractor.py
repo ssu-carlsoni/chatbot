@@ -2,7 +2,7 @@ from abc import ABC
 
 from bs4 import BeautifulSoup
 
-from ..models.document import Document
+from chatbot.models.document import Document
 
 
 class Extractor(ABC):

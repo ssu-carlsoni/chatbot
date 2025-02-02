@@ -5,7 +5,7 @@ description = ""
 authors = ["Ian Carlson <carlsoni@sonoma.edu>"]
 readme = "README.md"
 packages = [
-    { include = "src" },
+    { include = "chatbot", from = "src" }
 ]
 
 [tool.poetry.dependencies]
@@ -27,4 +27,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-chatbot-cli = "src.cli.chatbot_cli:app"
+chatbot-cli = "chatbot.cli.chatbot_cli:app"

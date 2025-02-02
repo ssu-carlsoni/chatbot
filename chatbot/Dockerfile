@@ -1,5 +1,8 @@
 FROM python:3.12-slim
 
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/code/src
+
 RUN pip install --upgrade pip && \
   pip install poetry && \
   poetry config virtualenvs.create false
@@ -12,4 +15,4 @@ RUN poetry install --no-interaction --no-ansi --no-root
 
 COPY . .
 
-CMD ["uvicorn", "src.fastapi.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "chatbot.fastapi.main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -2,7 +2,7 @@ from typing import Optional
 
 import httpx
 
-from ..models.document import Document
+from chatbot.models.document import Document
 
 
 class Fetcher:

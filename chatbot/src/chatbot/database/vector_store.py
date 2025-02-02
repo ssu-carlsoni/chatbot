@@ -7,9 +7,9 @@ import weaviate
 import weaviate.classes.config as wc
 from weaviate.exceptions import WeaviateBaseError
 
-from ..knowledge.extractor import Extractor
-from ..models.document import Document
-from ..models.query import Query
+from chatbot.knowledge.extractor import Extractor
+from chatbot.models.document import Document
+from chatbot.models.query import Query
 
 
 # VectorStore Interface
@@ -91,7 +91,7 @@ class WeaviateVectorStore(VectorStore):
         vector_content = self.extractor.get_search_content(document)
 
         filename = self.sanitize_filename(document.url)
-        directory = "crawled_content"
+        directory = "data"
         os.makedirs(directory, exist_ok=True)
         filepath = os.path.join(directory, filename)
 
@@ -107,7 +107,8 @@ class WeaviateVectorStore(VectorStore):
         pass
 
 
-    def sanitize_filename(self, url: str) -> str:
+    @staticmethod
+    def sanitize_filename(url: str) -> str:
         # Parse the URL and query string
         parsed_url = urllib.parse.urlparse(url)
         path = parsed_url.path.replace('/', '_')  # Replace / with _

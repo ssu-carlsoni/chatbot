@@ -1,11 +1,11 @@
 import time
 from typing import List
 
-from ..database.vector_store import VectorStore
-from ..knowledge.extractor import Extractor
-from ..knowledge.fetcher import Fetcher
-from ..knowledge.url_manager import UrlManager, URLStatus
-from ..models.document import Document
+from chatbot.database.vector_store import VectorStore
+from chatbot.knowledge.extractor import Extractor
+from chatbot.knowledge.fetcher import Fetcher
+from chatbot.knowledge.url_manager import UrlManager, URLStatus
+from chatbot.models.document import Document
 
 
 class KnowledgeManager:
