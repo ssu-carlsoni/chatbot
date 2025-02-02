@@ -1,3 +1,7 @@
 .idea
 .env
 __pycache__
+
+
+chatbot/data/*
+!chatbot/data/.gitignore
