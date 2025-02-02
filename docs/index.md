@@ -3,7 +3,7 @@ SSU Chatbot Documentation
 
 Using:
 - Docker and Docker Compose
-- Python 3.11
+- Python 3.12
 - [Poetry](https://python-poetry.org/) for dependency management
 - [LangChain](https://python.langchain.com/v0.2/docs/langchain/)
 - [FastAPI](https://fastapi.tiangolo.com/) for:

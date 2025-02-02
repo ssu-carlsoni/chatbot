@@ -1,12 +1,12 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 
-RUN pip install --upgrade pip
-RUN pip install poetry
-RUN poetry config virtualenvs.create false
+RUN pip install --upgrade pip && \
+  pip install poetry && \
+  poetry config virtualenvs.create false
 
 WORKDIR /code
 
-COPY pyproject.toml ./README.md ./poetry.lock* ./
+COPY pyproject.toml poetry.lock* README.md ./
 
 RUN poetry install --no-interaction --no-ansi --no-root
 
