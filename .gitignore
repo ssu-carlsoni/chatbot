@@ -2,6 +2,6 @@
 .env
 __pycache__
 
-
+/chatbot/config.yml
 chatbot/data/*
 !chatbot/data/.gitignore

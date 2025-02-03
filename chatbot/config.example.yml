@@ -1,0 +1,7 @@
+#
+# This is an example configuration file for the chatbot.
+# To use it, copy it to `config.yml` and replace the placeholders with your own values.
+#
+
+openai:
+  api_key: 'replace-with-openai-api-key'

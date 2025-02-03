@@ -5,6 +5,7 @@ Using:
 - Docker and Docker Compose
 - Python 3.12
 - [Poetry](https://python-poetry.org/) for dependency management
+- [Dependency Injector](http://python-dependency-injector.ets-labs.org/) for dependency injection
 - [LangChain](https://python.langchain.com/v0.2/docs/langchain/)
 - [FastAPI](https://fastapi.tiangolo.com/) for:
   - REST API

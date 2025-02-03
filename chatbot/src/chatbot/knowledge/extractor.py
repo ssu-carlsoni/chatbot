@@ -2,26 +2,26 @@ from abc import ABC
 
 from bs4 import BeautifulSoup
 
-from chatbot.models.document import Document
+from chatbot.models.web import WebDocument
 
 
 class Extractor(ABC):
     @staticmethod
-    def get_search_content(document: Document) -> str:
+    def get_search_content(document: WebDocument) -> str:
         pass
 
     @staticmethod
-    def get_prompt_content(document: Document) -> str:
+    def get_prompt_content(document: WebDocument) -> str:
         pass
 
     @staticmethod
-    def get_urls(document: Document) -> [str]:
+    def get_urls(document: WebDocument) -> [str]:
         pass
 
 
 class CatalogExtractor(Extractor):
     @staticmethod
-    def get_search_content(document: Document) -> str:
+    def get_search_content(document: WebDocument) -> str:
         content = ''
         elements = CatalogExtractor.get_elements(document)
         for element in elements:
@@ -32,7 +32,7 @@ class CatalogExtractor(Extractor):
         return content
 
     @staticmethod
-    def get_prompt_content(document: Document) -> str:
+    def get_prompt_content(document: WebDocument) -> str:
         content = ''
         elements = CatalogExtractor.get_elements(document)
         for element in elements:
@@ -40,7 +40,7 @@ class CatalogExtractor(Extractor):
         return content
 
     @staticmethod
-    def get_urls(document: Document) -> [str]:
+    def get_urls(document: WebDocument) -> [str]:
         soup = BeautifulSoup(document.raw_content, 'html.parser')
         urls = []
         for link in soup.find_all('a'):
@@ -52,7 +52,7 @@ class CatalogExtractor(Extractor):
         return absolute_urls
 
     @staticmethod
-    def get_elements(document: Document) -> [str]:
+    def get_elements(document: WebDocument) -> [str]:
         elements = []
         soup = BeautifulSoup(document.raw_content, 'html.parser')
         content_wrapper = (soup.find('h1')

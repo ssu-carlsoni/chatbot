@@ -8,7 +8,7 @@ import weaviate.classes.config as wc
 from weaviate.exceptions import WeaviateBaseError
 
 from chatbot.knowledge.extractor import Extractor
-from chatbot.models.document import Document
+from chatbot.models.web import WebDocument
 from chatbot.models.query import Query
 
 
@@ -24,11 +24,11 @@ class VectorStore(ABC):
         pass
 
     @abstractmethod
-    def add_document(self, document: Document) -> bool:
+    def add_document(self, document: WebDocument) -> bool:
         pass
 
     @abstractmethod
-    def retrieve(self, query: Query) -> List[Document]:
+    def retrieve(self, query: Query) -> List[WebDocument]:
         pass
 
 
@@ -87,7 +87,7 @@ class WeaviateVectorStore(VectorStore):
             return False
 
 
-    def add_document(self, document: Document) -> bool:
+    def add_document(self, document: WebDocument) -> bool:
         vector_content = self.extractor.get_search_content(document)
 
         filename = self.sanitize_filename(document.url)
@@ -103,7 +103,7 @@ class WeaviateVectorStore(VectorStore):
         return True
 
 
-    def retrieve(self, query: Query) -> List[Document]:
+    def retrieve(self, query: Query) -> List[WebDocument]:
         pass
 
 
@@ -123,7 +123,3 @@ class WeaviateVectorStore(VectorStore):
         # Truncate the filename if it's too long and add .txt extension
         return filename[
                :255] + ".txt"  # Max filename length for most filesystems
-
-# VectorStore Factory
-def create() -> VectorStore:
-    return WeaviateVectorStore()

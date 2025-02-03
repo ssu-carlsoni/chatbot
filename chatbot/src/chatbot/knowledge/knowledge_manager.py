@@ -5,7 +5,7 @@ from chatbot.database.vector_store import VectorStore
 from chatbot.knowledge.extractor import Extractor
 from chatbot.knowledge.fetcher import Fetcher
 from chatbot.knowledge.url_manager import UrlManager, URLStatus
-from chatbot.models.document import Document
+from chatbot.models.web import WebDocument
 
 
 class KnowledgeManager:
@@ -38,5 +38,5 @@ class KnowledgeManager:
         return False
 
 
-    def retrieve_knowledge(self) -> List[Document]:
+    def retrieve_knowledge(self) -> List[WebDocument]:
         pass

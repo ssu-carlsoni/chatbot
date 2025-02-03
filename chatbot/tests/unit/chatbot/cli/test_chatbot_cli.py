@@ -10,7 +10,7 @@ class TestChatbotCLI(unittest.TestCase):
     def setUp(self):
         self.runner = CliRunner()
 
-    @patch("chatbot.cli.chatbot_cli.KnowledgeManager")
+    @patch("chatbot.containers.Container.knowledge_manager")
     def test_update_knowledge_success(self, mock_knowledge_manager):
         mock_knowledge_manager.return_value.update_knowledge.return_value = True
 
@@ -20,7 +20,7 @@ class TestChatbotCLI(unittest.TestCase):
         self.assertIn("Knowledge Update Successful", result.output)
 
 
-    @patch("chatbot.cli.chatbot_cli.KnowledgeManager")
+    @patch("chatbot.containers.Container.knowledge_manager")
     def test_update_knowledge_failure(self, mock_knowledge_manager):
         mock_knowledge_manager.return_value.update_knowledge.return_value = False
 
