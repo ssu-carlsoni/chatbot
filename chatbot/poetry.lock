@@ -603,6 +603,9 @@ files = [
     {file = "dependency_injector-4.45.0.tar.gz", hash = "sha256:7effdb9e45f5c2813e2fd9dc2ef2c446dd59716f66f9c772ab27b9ed16efc894"},
 ]
 
+[package.dependencies]
+pyyaml = {version = "*", optional = true, markers = "extra == \"yaml\""}
+
 [package.extras]
 aiohttp = ["aiohttp"]
 flask = ["flask"]
@@ -4174,4 +4177,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "9cded5e604594606c9322fd41b5e17a6689261e43bb8eead58739b1d4f5df89a"
+content-hash = "a3633401258349546819054dd2c6e50ab99b94ebb31f0cfbdea16e4e9b60f3e8"
