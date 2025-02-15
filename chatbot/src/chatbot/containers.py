@@ -6,6 +6,7 @@ import sys
 from dependency_injector import containers, providers
 from dependency_injector.wiring import required
 from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 import weaviate
 
 from chatbot.rag.document_loaders.courses_csv_loader import CoursesCSVLoader
@@ -44,11 +45,25 @@ class Container(containers.DeclarativeContainer):
         stream=sys.stdout,
     )
 
+    # Document Loaders
     course_csv_loader = providers.Factory(
         CoursesCSVLoader,
         file_path=config.data_sources.course_csv_file(),
     )
+    # List of document loaders for KnowledgeManager
+    document_loaders = providers.List(
+        course_csv_loader,
+    )
 
+    # Text Splitter for Document Embedding
+    text_splitter = providers.Factory(
+        RecursiveCharacterTextSplitter,
+        chunk_size=config.text_splitter.chunk_size(),
+        chunk_overlap=config.text_splitter.chunk_overlap(),
+        add_start_index=config.text_splitter.add_start_index(),
+    )
+
+    # Embeddings for Document Vectorization
     embedding = providers.Factory(
         HuggingFaceEmbeddings,
         model_name=config.huggingface.embedding_model_name(),
@@ -56,6 +71,7 @@ class Container(containers.DeclarativeContainer):
         encode_kwargs={"normalize_embeddings": False},
     )
 
+    # Weaviate Client for Vector Store
     weaviate_client = providers.Resource(
         init_weaviate_client,
         http_host=config.weaviate.http_host(),
@@ -66,6 +82,7 @@ class Container(containers.DeclarativeContainer):
         grpc_secure=config.weaviate.grpc_secure(),
     )
 
+    # Vector Store for KnowledgeManager
     vector_store = providers.Factory(
         WeaviateVectorStore,
         client=weaviate_client,
@@ -74,11 +91,14 @@ class Container(containers.DeclarativeContainer):
         text_key="text",
     )
 
+    # Knowledge Manager for RAG
     knowledge_manager = providers.Factory(
         KnowledgeManager,
         logger=providers.Factory(
             logging.getLogger,
             "rag.KnowledgeManager"
         ),
-        vector_store=vector_store
+        document_loaders=document_loaders,
+        text_splitter=text_splitter,
+        vector_store=vector_store,
     )

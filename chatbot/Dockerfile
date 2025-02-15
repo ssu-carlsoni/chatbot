@@ -15,4 +15,4 @@ RUN poetry install --no-interaction --no-ansi --no-root
 
 COPY . .
 
-CMD ["uvicorn", "chatbot.fastapi.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "chatbot.web.main:app", "--host", "0.0.0.0", "--port", "8000"]

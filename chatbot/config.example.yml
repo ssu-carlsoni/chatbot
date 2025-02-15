@@ -4,13 +4,13 @@
 #
 
 openai:
-  api_key: 'replace-with-openai-api-key'
+  api_key: 'override-with-openai-api-key'
 
 google:
-  api_key: 'replace-with-google-api-key'
+  api_key: 'override-with-google-api-key'
 
 langsmith:
-  api_key: 'replace-with-langsmith-api-key'
+  api_key: 'override-with-langsmith-api-key'
   tracing: true
   endpoint: 'https://api.smith.langchain.com'
   project: 'default'
@@ -28,3 +28,8 @@ weaviate:
 
 data_sources:
   course_csv_file: 'data/courses.csv'
+
+text_splitter:
+  chunk_size: 1000
+  chunk_overlap: 200
+  add_start_index: true

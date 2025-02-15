@@ -7,14 +7,13 @@ container = Container()
 
 
 @app.command()
-def update_knowledge():
+def knowledge_rebuild():
     return_code = 0
-    loaders = [container.course_csv_loader()]
     manager = container.knowledge_manager()
-    if manager.reload_knowledge(loaders=loaders):
-        typer.echo("Knowledge Update Successful")
+    if manager.rebuild():
+        typer.echo("Knowledge Rebuilt Successful")
     else:
-        typer.echo("Knowledge Update Failed")
+        typer.echo("Knowledge Rebuild Failed")
         return_code = 1
     container.shutdown_resources()
     raise typer.Exit(code=return_code)

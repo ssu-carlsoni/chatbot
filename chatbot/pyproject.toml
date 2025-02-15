@@ -25,6 +25,7 @@ python-dotenv = "^1.0"
 typer = "^0.9"
 uvicorn = "^0.23"
 weaviate-client = "^4.7"
+langchain-text-splitters = "^0.3.6"
 
 [tool.poetry.group.dev.dependencies]
 langchain-cli = ">=0.0.35"
