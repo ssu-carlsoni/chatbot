@@ -23,12 +23,17 @@ class KnowledgeManager:
     def rebuild(self) -> bool:
         self.vector_store.delete()
         self.logger.info("Knowledge deleted")
-        self.logger.info("Adding knowledge")
+        self.logger.info("Starting to load knowledge")
         for loader in self.document_loaders:
+            self.logger.info(f"Loading documents from {loader.__class__.__name__}")
             documents = loader.load()
+            self.logger.info(f"Loaded {len(documents)} documents")
             splits = self.text_splitter.split_documents(documents)
+            self.logger.info(f"Documents split into {len(splits)} parts")
+            self.logger.info('Adding splits documents to vector store',
+                             extra={'loader': loader.__class__.__name__})
             self.vector_store.add_documents(documents=splits)
-            self.logger.info('Documents add to vector store',
+            self.logger.info('Split documents added to vector store',
                              extra={'loader': self.__class__.__name__})
         return True
 

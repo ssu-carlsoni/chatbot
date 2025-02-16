@@ -5,3 +5,4 @@ __pycache__
 /chatbot/config.yml
 chatbot/data/*
 !chatbot/data/.gitignore
+/chatbot/tests/fixtures/*_processed.csv

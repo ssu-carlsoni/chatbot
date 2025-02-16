@@ -1,10 +1,7 @@
 import logging
-import os
-import pprint
 import sys
 
 from dependency_injector import containers, providers
-from dependency_injector.wiring import required
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import weaviate
