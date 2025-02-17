@@ -10,6 +10,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.12"
+async-typer = "^0.1.8"
 beautifulsoup4 = "^4.12"
 dependency-injector = {extras = ["yaml"], version = "^4.45.0"}
 jinja2 = "^3.1"

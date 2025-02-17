@@ -4,34 +4,22 @@ import sys
 from dependency_injector import containers, providers
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-import weaviate
 
+from chatbot.rag.chatbot import Chatbot
 from chatbot.rag.document_loaders.courses_csv_loader import CoursesCSVLoader
 from chatbot.rag.knowledge_manager import KnowledgeManager
+from chatbot.storage.weaviate_client import init_weaviate_client
 from chatbot.storage.weaviate_vector_store import WeaviateVectorStore
 
 
-def init_weaviate_client(
-    http_host: str,
-    http_port: int,
-    http_secure: bool,
-    grpc_host: str,
-    grpc_port: int,
-    grpc_secure: bool,
-):
-    client = weaviate.connect_to_custom(
-        http_host=http_host,
-        http_port=http_port,
-        http_secure=http_secure,
-        grpc_host=grpc_host,
-        grpc_port=grpc_port,
-        grpc_secure=grpc_secure,
-    )
-    yield client
-    client.close()
-
-
 class Container(containers.DeclarativeContainer):
+
+    wiring_config = containers.WiringConfiguration(modules=[
+        "chatbot.cli.chatbot_cli",
+        "chatbot.rag.knowledge_manager",
+        "chatbot.web.endpoints",
+    ])
+
     config = providers.Configuration(strict=True)
     config.from_yaml(filepath="./config.example.yml", required=True)
     config.from_yaml(filepath="./config.yml", required=True)
@@ -98,4 +86,9 @@ class Container(containers.DeclarativeContainer):
         document_loaders=document_loaders,
         text_splitter=text_splitter,
         vector_store=vector_store,
+    )
+
+    chatbot = providers.Factory(
+        Chatbot,
+        knowledge_manager=knowledge_manager,
     )

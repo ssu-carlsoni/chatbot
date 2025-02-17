@@ -1,33 +1,31 @@
 import typer
+from async_typer import AsyncTyper
 
 from chatbot.containers import Container
 
-app = typer.Typer()
+
+app = AsyncTyper()
 container = Container()
 
 
-@app.command()
-def knowledge_rebuild():
+@app.async_command()
+async def rebuild_knowledge():
     return_code = 0
-    manager = container.knowledge_manager()
+    await container.init_resources()
+    manager = await container.knowledge_manager()
     if manager.rebuild():
-        typer.echo("Knowledge Rebuilt Successful")
+        print("Knowledge Rebuilt Successfully")
     else:
-        typer.echo("Knowledge Rebuild Failed")
+        print("Knowledge Rebuild Failed")
         return_code = 1
-    container.shutdown_resources()
+    await container.shutdown_resources()
     raise typer.Exit(code=return_code)
 
 
 @app.command()
-def test_question():
-    manager = container.knowledge_manager()
-    question = "What are the math course are offered?"
-    documents = manager.retrieve(question)
-    for doc in documents:
-        typer.echo(doc.metadata)
-    container.shutdown_resources()
-    raise typer.Exit(code=0)
+def chat():
+    typer.echo("To be implemented")
+    pass
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ services:
       - '8000:8000'
     volumes:
       - ./chatbot:/code
-    command: sh -c "uvicorn chatbot.web.main:app --host 0.0.0.0 --port 8000 --reload"
+    command: sh -c "uvicorn chatbot.web.application:app --host 0.0.0.0 --port 8000 --reload"
     depends_on:
       - weaviate
 
