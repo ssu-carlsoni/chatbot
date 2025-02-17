@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 
 from dependency_injector import containers, providers
@@ -7,6 +8,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from chatbot.rag.chatbot import Chatbot
 from chatbot.rag.document_loaders.courses_csv_loader import CoursesCSVLoader
+from chatbot.rag.document_loaders.programs_csv_loader import ProgramsCSVLoader
 from chatbot.rag.knowledge_manager import KnowledgeManager
 from chatbot.storage.weaviate_client import init_weaviate_client
 from chatbot.storage.weaviate_vector_store import WeaviateVectorStore
@@ -24,6 +26,13 @@ class Container(containers.DeclarativeContainer):
     config.from_yaml(filepath="./config.example.yml", required=True)
     config.from_yaml(filepath="./config.yml", required=True)
 
+
+    # TODO: maybe move from env to direct config
+    os.environ["OPENAI_API_KEY"] = config.openai.api_key()
+    os.environ["LANGCHAIN_TRACING_V2"] = "true"
+    os.environ["LANGCHAIN_API_KEY"] = config.langsmith.api_key()
+
+
     logging_config = providers.Resource(
         logging.basicConfig,
         level=logging.INFO,
@@ -33,11 +42,16 @@ class Container(containers.DeclarativeContainer):
     # Document Loaders
     course_csv_loader = providers.Factory(
         CoursesCSVLoader,
-        file_path=config.data_sources.course_csv_file(),
+        file_path=config.data_sources.courses_csv_file(),
+    )
+    programs_csv_loader = providers.Factory(
+        ProgramsCSVLoader,
+        file_path=config.data_sources.programs_csv_file(),
     )
     # List of document loaders for KnowledgeManager
     document_loaders = providers.List(
         course_csv_loader,
+        programs_csv_loader,
     )
 
     # Text Splitter for Document Embedding

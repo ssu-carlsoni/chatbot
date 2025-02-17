@@ -5,6 +5,7 @@
 
 openai:
   api_key: 'override-with-openai-api-key'
+  model: 'gpt-3.5-turbo'
 
 google:
   api_key: 'override-with-google-api-key'
@@ -16,7 +17,7 @@ langsmith:
   project: 'default'
 
 huggingface:
-  embedding_model_name: 'sentence-transformers/all-mpnet-base-v2'
+  embedding_model_name: 'WhereIsAI/UAE-Large-V1'
 
 weaviate:
   http_host: 'weaviate'
@@ -27,9 +28,10 @@ weaviate:
   grpc_secure: false
 
 data_sources:
-  course_csv_file: 'data/courses.csv'
+  courses_csv_file: 'data/courses.csv'
+  programs_csv_file: 'data/programs.csv'
 
 text_splitter:
-  chunk_size: 1000
-  chunk_overlap: 200
+  chunk_size: 12000
+  chunk_overlap: 1500
   add_start_index: true

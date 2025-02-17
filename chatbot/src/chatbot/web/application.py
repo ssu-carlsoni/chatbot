@@ -23,7 +23,7 @@ def create_app() -> FastAPI:
     application = FastAPI(lifespan=lifespan)
     application.mount(
         "/static",
-        StaticFiles(directory="src/chatbot/web"),
+        StaticFiles(directory="src/chatbot/web/static"),
         name="static",
     )
     application.include_router(router)

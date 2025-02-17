@@ -22,10 +22,17 @@ async def rebuild_knowledge():
     raise typer.Exit(code=return_code)
 
 
-@app.command()
-def chat():
-    typer.echo("To be implemented")
-    pass
+@app.async_command()
+async def retrieve_knowledge(question: str):
+    return_code = 0
+    await container.init_resources()
+    manager = await container.knowledge_manager()
+    documents = manager.retrieve(question)
+    for doc in documents:
+        print(doc)
+        print("\n\n----\n\n")
+    await container.shutdown_resources()
+    raise typer.Exit(code=return_code)
 
 
 if __name__ == "__main__":

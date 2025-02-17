@@ -19,7 +19,7 @@ class CoursesCSVLoader(BaseLoader):
                            csv_args={
                                'dialect': 'excel'
                            },
-                           source_column='course_url',
+                           source_column='source_url',
                            metadata_columns=[
                                'catalog_oid',
                                'course_oid',
@@ -28,16 +28,18 @@ class CoursesCSVLoader(BaseLoader):
                                'course_name',
                            ],
                            content_columns=[
+                               'document_type',
+                               'source_url',
+                               'course_name',
+                               'course_prefix',
+                               'course_code',
                                'department_name',
                                'course_type',
                                'school_college_name',
-                               'course_prefix',
-                               'course_code',
-                               'course_name',
                                'units',
                                'description',
                                'prerequisites',
-                               'co-requisites',
+                               'co_requisites',
                                'ge_category',
                                'typically_offered',
                                'teaching_mode',
@@ -65,6 +67,7 @@ class CoursesCSVLoader(BaseLoader):
             'Teaching Mode:',
             'Grading:',
             'Program Usage',
+            'Is Active',
         ]
         df = pd.read_csv(self.file_path,
                          usecols=use_columns,
@@ -82,7 +85,7 @@ class CoursesCSVLoader(BaseLoader):
             'Unit(s):': 'units',
             'Description (Rendered no HTML)': 'description',
             'Prerequisite(s): (Rendered no HTML)': 'prerequisites',
-            'Co-requisite(s): (Rendered no HTML)': 'co-requisites',
+            'Co-requisite(s): (Rendered no HTML)': 'co_requisites',
             'GE Category:': 'ge_category',
             'Typically Offered': 'typically_offered',
             'Teaching Mode:': 'teaching_mode',
@@ -90,8 +93,15 @@ class CoursesCSVLoader(BaseLoader):
             'Program Usage': 'program_usage',
         })
 
+        # Filter out inactive courses
+        df = df[df["Is Active"] == "1"]
+
+        df['document_type'] = 'course'
+
+        df['course_name'] = df['course_prefix'] + ' ' + df['course_code'] + ' - ' + df['course_name']
+
         base_url = "https://catalog.sonoma.edu/content.php?filter%5B27%5D="
-        df['course_url'] = ((base_url + df['course_prefix'] +
+        df['source_url'] = ((base_url + df['course_prefix'] +
                              '&filter%5B29%5D=' + df['course_code'])
                             + '&filter%5Bkeyword%5D=&filter%5B32%5D=1&filter'
                               '%5Bcpage%5D=1&cur_cat_oid=11&expand=1&navoid=1421&search_database=Filter#')
