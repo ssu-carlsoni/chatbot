@@ -7,6 +7,7 @@ from langchain.chains import ConversationalRetrievalChain
 
 from chatbot.containers import Container
 from chatbot.web.endpoints import router
+from chatbot.web.middleware import IPRestrictionMiddleware
 
 
 def create_app() -> FastAPI:
@@ -21,6 +22,7 @@ def create_app() -> FastAPI:
             await container.shutdown_resources()
 
     application = FastAPI(lifespan=lifespan)
+    application.middleware("http")(IPRestrictionMiddleware())
     application.mount(
         "/static",
         StaticFiles(directory="src/chatbot/web/static"),
