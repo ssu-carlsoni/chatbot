@@ -18,15 +18,23 @@ class Chatbot:
 
     def get_rag_chain(self):
         template = """
-You are a RAG chatbot for Sonoma State University's academic catalog.
+You are a RAG Chatbot for Sonoma State University's academic catalog. Your purpose is to help users explore the catalog by providing information about programs and courses.
+
+Use the provided context to answer questions, but do not speculate or provide information beyond the given sources. If the answer is unclear or uncertain, state that you don’t know and recommend speaking with an academic advisor. Keep responses neutral, professional, and concise. Avoid definitive statements about policies, requirements, or personal academic decisions—always encourage users to verify details with an advisor if necessary.
+
+When using information from the context, you must cite the source inline using this format: [Source X] where X is the number of the source. If multiple sources apply, list them separately, e.g., [Source 1] [Source 2] [Source 4].
+
+Do not generate opinions, personal advice, or interpretations. Do not respond to questions unrelated to the catalog. Do not generate any inappropriate, offensive, or misleading content.
+
+
 The context will either be a program or course from the catalog.   
 Use the following pieces of context to answer the question at the end.
-If you don't know the answer, just say that you don't know, don't try to make up an answer.
-Offer access to an Outreach Counselor for more information at https://admissions.sonoma.edu/visit-ssu/meet-your-outreach-counselors.
+If you don't know the answer, do not make one up, just say you don't know.
 Keep the answer as concise as possible.
 
-When you use information from the context, you MUST cite the source using [Source X] notation, where X is the number of the source. 
-The citations should appear at the end the reply.
+When you use information from the context, you MUST cite the source inline using the following format:
+[Source X] where X is the number of the source.
+Only include one source per citation bracket. If multiple sources apply, list them separately, e.g., [Source 1] [Source 2] [Source 4].
 
 {context}
 
@@ -61,55 +69,38 @@ Helpful Answer (with citations):
 
         return "\n\n".join(formatted_docs)
 
-    def add_source_footnotes_with_links(self, response: str) -> str:
-        """Add a footnotes section with HTML links at the end of the response."""
-        # First, check if we have documents to reference
-        if not hasattr(self, 'latest_docs') or not self.latest_docs:
-            return response
+    def add_source_footnotes_with_links(self, text: str) -> str:
+        # get sources and positions
+        sources = {}
+        current_index = 1
+        source_ids = re.findall(r'\[Source (\d+)\]', text)
+        for source_id in source_ids:
+            source_id = int(source_id)
+            if source_id not in sources.values():
+                sources[current_index] = source_id
+                current_index += 1
 
-        # Create the footnotes section
-        footnotes_section = "\n\n<hr>\n<h3>Sources:</h3>\n<ol>"
+        # replace sources with superscript based on position
+        processed_text = text
+        for index, source_id in sources.items():
+            processed_text = processed_text.replace(
+                f'[Source {source_id}]',
+                f'<sup class="text-secondary">{index}</sup>'
+            )
 
-        # Keep track of which sources are actually cited in the response
-        cited_sources = set()
+        processed_text += "\n<hr>\n"
+        for index, source_id in sources.items():
+            doc = self.latest_docs[source_id - 1]
+            url = doc.metadata.get('source')
+            title = doc.metadata.get('course_name')
+            if not title:
+                title = doc.metadata.get('program_name')
+            processed_text += (f'<sup class="text-secondary">{index}</sup><a href="{url}"'
+                               f'>{title}</a><br>\n')
+            index += 1
 
-        # Find all [Source X] citations in the response
-        source_pattern = r'\[Source (\d+)\]'
-        for match in re.finditer(source_pattern, response):
-            source_num = int(match.group(1))
-            cited_sources.add(source_num)
-
-        # Add an entry for each cited source
-        for source_num in sorted(cited_sources):
-            if 1 <= source_num <= len(self.latest_docs):
-                doc = self.latest_docs[source_num - 1]
-                doc_title = doc.metadata.get('source', 'Unknown Source')
-                url = doc.metadata.get('url', None)
-
-                if url:
-                    footnotes_section += f'\n  <li id="source-{source_num}">{doc_title} - <a href="{url}" target="_blank">Link</a></li>'
-                else:
-                    footnotes_section += f'\n  <li id="source-{source_num}">{doc_title}</li>'
-
-        footnotes_section += "\n</ol>"
-
-        # Update all [Source X] references to be HTML links to the footnotes
-        def replace_with_footnote_link(match):
-            source_num = int(match.group(1))
-            if source_num in cited_sources:
-                return f'<a href="#source-{source_num}">[Source {source_num}]</a>'
-            return match.group(0)
-
-        linked_response = re.sub(source_pattern, replace_with_footnote_link,
-                                 response)
-
-        # Only add the footnotes section if there are cited sources
-        if cited_sources:
-            final_response = linked_response + footnotes_section
-        else:
-            final_response = linked_response
-
-        return final_response
+        # processed_text = text + "\n<br>---</br>\n" + processed_text
+        return processed_text
 
     async def get_response(self, message: str) -> str:
         docs = self.knowledge_manager.retrieve(message)
