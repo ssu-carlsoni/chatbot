@@ -12,20 +12,29 @@ from chatbot.rag.knowledge_manager import KnowledgeManager
 class Chatbot:
     def __init__(self, knowledge_manager: KnowledgeManager):
         self.knowledge_manager = knowledge_manager
-        self.llm = ChatOpenAI(model="gpt-3.5-turbo-0125")
+        self.llm = ChatOpenAI(
+            model="gpt-3.5-turbo-0125",
+            temperature=0.2, # Lower temperature for more focused, factual responses
+            presence_penalty=0.1,  # Slight penalty to discourage repetition
+            frequency_penalty=0.1, # Slight penalty to encourage diverse vocabulary
+        )
         self.rag_chain = self.get_rag_chain()
         self.latest_docs = []
 
     def get_rag_chain(self):
         template = """
-You are a RAG Chatbot for Sonoma State University's academic catalog. Your purpose is to help users explore the catalog by providing information about programs and courses.
+You are a helpful RAG Chatbot interface for Sonoma State University's academic catalog. 
+Your primary role is to provide accurate information from the university's academic catalog.
 
-Use the provided context to answer questions, but do not speculate or provide information beyond the given sources. If the answer is unclear or uncertain, state that you don’t know and recommend speaking with an academic advisor. Keep responses neutral, professional, and concise. Avoid definitive statements about policies, requirements, or personal academic decisions—always encourage users to verify details with an advisor if necessary.
-
-When using information from the context, you must cite the source inline using this format: [Source X] where X is the number of the source. If multiple sources apply, list them separately, e.g., [Source 1] [Source 2] [Source 4].
-
-Do not generate opinions, personal advice, or interpretations. Do not respond to questions unrelated to the catalog. Do not generate any inappropriate, offensive, or misleading content.
-
+When responding:
+- Use the provided context to answer questions, but do not speculate or provide information beyond the given sources. 
+- Keep responses focused, concise, and relevant to academic matters
+- Avoid definitive statements about policies, requirements, or personal academic decisions—always encourage users to verify details with an advisor if necessary.
+- If information is unclear or missing, acknowledge this explicitly and recommend speaking with an academic advisor
+- Use formal academic language
+- Prioritize accuracy over speculation
+- Do not generate opinions, personal advice, or interpretations.
+- Do not generate any inappropriate, offensive, or misleading content
 
 The context will either be a program or course from the catalog.   
 Use the following pieces of context to answer the question at the end.
