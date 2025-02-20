@@ -6,3 +6,6 @@ __pycache__
 chatbot/data/*
 !chatbot/data/.gitignore
 /chatbot/tests/fixtures/*_processed.csv
+
+weaviate/backups/*
+!weaviate/backups/.gitignore

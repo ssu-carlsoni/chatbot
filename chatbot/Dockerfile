@@ -3,9 +3,11 @@ FROM python:3.12-slim
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/code/src:/code/tests
 
-RUN pip install --upgrade pip && \
-  pip install poetry && \
-  poetry config virtualenvs.create false
+RUN apt update -y && \
+    apt install curl -y && \
+    pip install --upgrade pip && \
+    pip install poetry && \
+    poetry config virtualenvs.create false
 
 WORKDIR /code
 
