@@ -6,10 +6,11 @@ class IPRestrictionMiddleware:
     def __init__(self):
         # Define allowed IP networks: localhost, IPv6 loopback, 172.16.0.0/12, and 130.157.0.0/16
         self.allowed_networks = [
-            ipaddress.ip_network("127.0.0.1/32"),
-            ipaddress.ip_network("::1/128"),
-            ipaddress.ip_network("172.16.0.0/12"),
-            ipaddress.ip_network("130.157.0.0/16"),
+            ipaddress.ip_network("127.0.0.1/32"), # IPv4 loop
+            ipaddress.ip_network("::1/128"), # IPv6 loopback
+            ipaddress.ip_network("172.16.0.0/12"), # Docker & WSL2
+            ipaddress.ip_network("130.157.0.0/16"), # SSU
+            ipaddress.ip_network("76.21.16.210/32"), # Home
         ]
 
     async def __call__(self, request: Request, call_next):
