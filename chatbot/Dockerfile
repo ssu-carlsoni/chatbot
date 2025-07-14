@@ -6,7 +6,7 @@ ENV PYTHONPATH=/code/src:/code/tests
 RUN apt update -y && \
     apt install curl -y && \
     pip install --upgrade pip && \
-    pip install poetry && \
+    pip install poetry setuptools && \
     poetry config virtualenvs.create false
 
 WORKDIR /code
